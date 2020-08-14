@@ -1,41 +1,33 @@
-import json
+#import json
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+#from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.views.decorators.http import require_http_methods
 
+@require_http_methods(["GET", "POST"])
 
-
-# Create your views here.
 def home(request):
     return render(request, 'home/home.html', {})
 
-"""def user_login(request):
-    msg = "login입니다."
-    return render(request, 'home/user_login.html',{'message': msg})
-
-def user_register(request):
-    msg = "회원가입입니다."
-    return render(request, 'home/user_register.html', {'message': msg})"""
-
 def user_register(request):
     if request.method == "POST":
-        if request.POST.get("password1","") == request.POST.get("passdword2",""):
+        if request.POST.get("password1",False) == request.POST.get("password2",False):
             user = User.objects.create_user(
-                username=request.POST["username"], password=request.POST["password1"])
+                username=request.POST.get("username",False),password=request.POST.get("password1",False),email=request.POST.get("email",False))
             auth.login(request,user)
             return redirect('home')
-        return render(request, 'home/user_register.html')
+        return render(request, 'user_register.html')
 
     return render(request, 'home/user_register.html')
 
 def user_login(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username', False)
+        password = request.POST.get('password', False)
         user = auth.authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -44,8 +36,17 @@ def user_login(request):
         else:
             return render(request, 'user_login.html', {'error': 'username or password is incorrect'})
     else:
-        return render(request, 'user_login.html')
+        return render(request, 'home/user_login.html')
 
-def logout(request):
+def user_logout(request):
     auth_logout(request)
     return redirect('home')
+
+def service_notice(request):
+    return render(request, 'home/service_notice.html')
+
+def service_center(request):
+    return render(request, 'home/service_center.html')
+
+def user_mypage(request):
+    return render(request, 'home/user_mypage.html')
