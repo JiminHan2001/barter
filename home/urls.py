@@ -1,4 +1,3 @@
-
 from django.urls import path
 from . import views
 
@@ -10,5 +9,6 @@ urlpatterns = [
     , path('notice', views.service_notice, name='service_notice')
     , path('center', views.service_center, name='service_center')
     , path('mypage', views.user_mypage, name='user_mypage')
+    , path('product', views.product_register, name='product_register')
     ,
 ]

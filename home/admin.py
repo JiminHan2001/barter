@@ -1,6 +1,10 @@
+from .models import User, Product
 from django.contrib import admin
-from .models import User
 
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+admin.site.register(Product, ProductAdmin)
 
 admin.site.register(User)
 
